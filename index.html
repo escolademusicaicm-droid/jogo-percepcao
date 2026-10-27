@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  JOGO DE PERCEPÇÃO MUSICAL — Keila Chrischner
+  Arquivo único e independente: nao depende de imagem,
+  pasta ou internet (a fonte do Google e opcional).
+
+  40 exercícios, SOMENTE percepção auditiva:
+   1. Notas isoladas ............  6
+   2. Extensão e registro .......  5
+   3. Notas em conjunto .........  8
+   4. Escalas ascendentes .......  5
+   5. Escalas descendentes ......  5
+   6. Saltos e intervalos .......  6
+   7. Notas alteradas ...........  5
+  ============================================================
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo de Percepção Musical | Keila Chrischner</title>
+<meta name="description" content="Treino de percepção musical com 40 exercícios auditivos: notas, extensão, acordes, escalas e intervalos. Correção imediata.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2b1f33; --plum:#4a2c5e; --plum-deep:#331d42;
+  --gold:#c9962e; --gold-soft:#e3b04b;
+  --cream:#faf6ef; --paper:#ffffff; --line:#e8e0d4;
+  --ok:#2f7d5d; --err:#b3413f; --soft:#8a7a96;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--cream);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Fraunces',serif;line-height:1.2}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ---------- topo ---------- */
+.topbar{background:rgba(250,246,239,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.topbar-in{max-width:820px;margin:0 auto;padding:.85rem 1.3rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{font-family:'Fraunces',serif;font-weight:700;color:var(--plum);font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand span{color:var(--gold)}
+.topbar-tag{font-size:.66rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--soft);white-space:nowrap;flex:0 0 auto}
+
+/* ---------- estrutura ---------- */
+.shell{max-width:820px;margin:0 auto;padding:2rem 1.3rem 4.5rem}
+.screen{display:none}
+.screen.active{display:block;animation:fade .35s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- intro ---------- */
+.eyebrow{display:inline-flex;align-items:center;gap:.45rem;background:rgba(201,150,46,.14);border:1px solid rgba(201,150,46,.4);color:#8a6719;font-size:.71rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding:.34rem .72rem;border-radius:99px;margin-bottom:1rem}
+h1{font-size:clamp(1.85rem,5.5vw,2.6rem);color:var(--plum);letter-spacing:-.5px;margin-bottom:.7rem}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{color:#5c4f66;font-size:1.02rem;max-width:56ch;margin-bottom:1.5rem}
+
+/* ---------- cartões ---------- */
+.hero-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-bottom:1.4rem;box-shadow:0 1px 2px rgba(43,31,51,.04)}
+.hero-stats{display:flex;gap:1.6rem;flex-wrap:wrap}
+.stat b{display:block;font-family:'Fraunces',serif;font-size:1.6rem;color:var(--plum);line-height:1.1}
+.stat span{font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);font-weight:700}
+
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;background:var(--plum);color:#fff;font-weight:700;font-size:1rem;padding:.95rem 1.6rem;border-radius:12px;transition:.18s;width:100%}
+.btn-primary:hover{background:var(--plum-deep);transform:translateY(-1px)}
+.btn-primary:active{transform:none}
+.btn-primary.gold{background:var(--gold);color:#3a2a10}
+.btn-primary.gold:hover{background:var(--gold-soft)}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;background:transparent;color:var(--plum);font-weight:700;font-size:.94rem;padding:.85rem 1.4rem;border-radius:12px;border:1.5px solid var(--line);transition:.18s}
+.btn-ghost:hover{border-color:var(--plum);background:rgba(74,44,94,.04)}
+
+.section-label{font-size:.72rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--soft);margin:1.9rem 0 .85rem}
+
+.cat-grid{display:grid;grid-template-columns:1fr;gap:.6rem}
+@media(min-width:560px){.cat-grid{grid-template-columns:1fr 1fr}}
+.cat{display:flex;align-items:center;gap:.85rem;background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:.85rem 1rem;text-align:left;transition:.16s;width:100%}
+.cat:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:0 4px 14px rgba(43,31,51,.06)}
+.cat-ico{font-size:1.25rem;flex:0 0 auto;width:2rem;height:2rem;display:grid;place-items:center;border-radius:9px;background:rgba(74,44,94,.07);color:var(--plum)}
+.cat-ico svg{display:block}
+.cat-txt strong{display:block;font-size:.94rem;color:var(--ink);font-weight:600}
+.cat-txt span{font-size:.78rem;color:var(--soft)}
+.cat-n{margin-left:auto;font-size:.72rem;font-weight:700;color:var(--gold);background:rgba(201,150,46,.12);padding:.2rem .5rem;border-radius:99px;flex:0 0 auto}
+
+/* ---------- jogo ---------- */
+.game-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.9rem}
+.pill{font-size:.7rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--plum);background:rgba(74,44,94,.08);padding:.3rem .7rem;border-radius:99px}
+.pill.score{color:#8a6719;background:rgba(201,150,46,.14)}
+.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:1.6rem}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));width:0;transition:width .35s ease;border-radius:99px}
+
+.q-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:1.5rem;box-shadow:0 1px 2px rgba(43,31,51,.04)}
+.q-num{font-size:.72rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem}
+.q-text{font-family:'Fraunces',serif;font-size:1.22rem;color:var(--plum);line-height:1.35;margin-bottom:1.3rem}
+
+.play-zone{display:flex;flex-direction:column;align-items:center;gap:.55rem;padding:1.2rem;background:linear-gradient(180deg,rgba(201,150,46,.07),rgba(201,150,46,.02));border:1px dashed rgba(201,150,46,.45);border-radius:14px;margin-bottom:1.4rem}
+.btn-play{display:inline-flex;align-items:center;gap:.6rem;background:var(--plum);color:#fff;font-weight:700;font-size:1.02rem;padding:.9rem 1.7rem;border-radius:99px;transition:.18s;box-shadow:0 4px 14px rgba(74,44,94,.22)}
+.btn-play:hover{background:var(--plum-deep);transform:translateY(-1px)}
+.btn-play[disabled]{opacity:.55;cursor:default;transform:none;box-shadow:none}
+.play-hint{font-size:.76rem;color:var(--soft)}
+.wave{display:flex;gap:3px;align-items:flex-end;height:14px}
+.wave i{width:3px;background:var(--gold);border-radius:2px;height:5px;animation:w .9s ease-in-out infinite}
+.wave i:nth-child(2){animation-delay:.15s}.wave i:nth-child(3){animation-delay:.3s}
+.wave i:nth-child(4){animation-delay:.45s}.wave i:nth-child(5){animation-delay:.6s}
+@keyframes w{0%,100%{height:5px}50%{height:14px}}
+
+.opts{display:flex;flex-direction:column;gap:.55rem}
+.opt{display:flex;align-items:center;gap:.75rem;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:.85rem 1rem;text-align:left;font-size:.97rem;font-weight:500;transition:.15s;width:100%;color:var(--ink)}
+.opt:hover:not([disabled]){border-color:var(--plum);background:rgba(74,44,94,.03)}
+.opt[disabled]{cursor:default}
+.opt .k{flex:0 0 1.55rem;height:1.55rem;display:grid;place-items:center;border-radius:7px;background:var(--cream);border:1px solid var(--line);font-size:.76rem;font-weight:700;color:var(--soft)}
+.opt.correct{border-color:var(--ok);background:rgba(47,125,93,.07)}
+.opt.correct .k{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--err);background:rgba(179,65,63,.06)}
+.opt.wrong .k{background:var(--err);border-color:var(--err);color:#fff}
+.opt.missed{border-color:var(--ok);border-style:dashed}
+
+.fb{margin-top:1.2rem;padding:1rem 1.1rem;border-radius:12px;display:none}
+.fb.show{display:block;animation:fade .25s ease both}
+.fb.ok{background:rgba(47,125,93,.08);border:1px solid rgba(47,125,93,.3)}
+.fb.no{background:rgba(179,65,63,.07);border:1px solid rgba(179,65,63,.28)}
+.fb-h{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.95rem;margin-bottom:.3rem}
+.fb.ok .fb-h{color:var(--ok)}.fb.no .fb-h{color:var(--err)}
+.fb-b{font-size:.88rem;color:#4d4157}
+
+.jump{display:flex;gap:.6rem;margin-top:1.2rem}
+.jump .btn-primary{flex:1}
+
+/* ---------- resultado ---------- */
+.score-hero{text-align:center;padding:2rem 1.3rem;background:var(--paper);border:1px solid var(--line);border-radius:18px;margin-bottom:1.2rem}
+.ring{width:150px;height:150px;margin:0 auto 1rem;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring-txt{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring-txt b{font-family:'Fraunces',serif;font-size:2.3rem;color:var(--plum);line-height:1}
+.ring-txt span{font-size:.72rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--soft)}
+.verdict{font-family:'Fraunces',serif;font-size:1.25rem;color:var(--plum);margin-bottom:.35rem}
+.verdict-sub{font-size:.9rem;color:#5c4f66;max-width:44ch;margin:0 auto}
+
+.brk{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1.2rem 1.3rem;margin-bottom:1.2rem}
+.brk-row{display:flex;align-items:center;gap:.8rem;padding:.5rem 0;border-bottom:1px solid rgba(232,224,212,.7)}
+.brk-row:last-child{border-bottom:none}
+.brk-name{font-size:.86rem;flex:1;min-width:0}
+.brk-bar{flex:0 0 90px;height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.brk-bar i{display:block;height:100%;border-radius:99px;background:var(--gold)}
+.brk-bar i.low{background:var(--err)}.brk-bar i.high{background:var(--ok)}
+.brk-v{font-size:.8rem;font-weight:700;color:var(--plum);flex:0 0 2.6rem;text-align:right}
+.acts{display:flex;gap:.6rem;flex-direction:column}
+@media(min-width:520px){.acts{flex-direction:row}.acts>*{flex:1}}
+.note{font-size:.8rem;color:var(--soft);text-align:center;margin-top:1.1rem}
+
+/* ---------- PORTÃO DE SENHA ---------- */
+#gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.2rem;background:linear-gradient(165deg,#4a2c5e 0%,#331d42 100%)}
+#gate.hide{display:none}
+.gate-card{background:#faf6ef;border-radius:22px;padding:2.1rem 1.7rem;max-width:380px;width:100%;text-align:center;box-shadow:0 22px 60px rgba(0,0,0,.38)}
+.gate-icon{margin-bottom:.6rem;color:#c9962e}
+#gate h2{font-family:'Fraunces',serif;color:#4a2c5e;font-size:1.3rem;margin-bottom:.45rem}
+#gate p{font-size:.9rem;color:#5d4d6b;margin-bottom:1.15rem;line-height:1.5}
+#gate input{width:100%;padding:.82rem 1rem;border:1.6px solid #e8e0d4;border-radius:12px;font-family:'Inter',sans-serif;font-size:1rem;text-align:center;margin-bottom:.75rem;background:#fff;color:#2b1f33}
+#gate input:focus{outline:none;border-color:#4a2c5e}
+#gate button{width:100%;padding:.88rem;border:none;border-radius:999px;background:#4a2c5e;color:#fff;font-family:'Inter',sans-serif;font-weight:600;font-size:.97rem;cursor:pointer;transition:.18s}
+#gate button:hover{background:#331d42}
+.gate-err{color:#b3413f;font-size:.84rem;margin:.65rem 0 0!important;min-height:1.15rem;font-weight:500}
+.gate-foot{font-size:.72rem;color:#9c8daa;margin-top:1rem!important;margin-bottom:0!important}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-icon"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" stroke-linecap="round"/></svg></div>
+    <h2>Jogo de Percepção</h2>
+    <p>Área exclusiva para alunos da Keila.<br>Digite a senha que você recebeu.</p>
+    <input id="gate-pass" type="password" placeholder="Senha" autocomplete="off" inputmode="text">
+    <button type="button" id="gate-btn">Entrar</button>
+    <p class="gate-err" id="gate-err"></p>
+    <p class="gate-foot">Keila Chrischner · Preparadora Vocal</p>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand">Keila Chrischner <span>·</span> Percepção</div>
+    <div class="topbar-tag">Treino</div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- ============ HOME ============ -->
+  <section id="home" class="screen active">
+    <div class="eyebrow">Treino de ouvido</div>
+    <h1>Jogo de <em>Percepção</em></h1>
+    <p class="lede">40 exercícios só de escuta — sem cantar, sem técnica. Ouça, responda e veja na hora se acertou. Treine quantas vezes quiser.</p>
+
+    <div class="hero-card">
+      <div class="hero-stats">
+        <div class="stat"><b>40</b><span>Exercícios</span></div>
+        <div class="stat"><b>7</b><span>Blocos</span></div>
+        <div class="stat"><b id="bestStat">—</b><span>Seu recorde</span></div>
+      </div>
+    </div>
+
+    <button class="btn-primary gold" id="btnFull">▶ Começar treino completo · 40 exercícios</button>
+
+    <div class="section-label">Ou treine um bloco específico</div>
+    <div class="cat-grid" id="catGrid"></div>
+
+    <p class="note">Use fone de ouvido e um lugar silencioso. O som é gerado na hora, no próprio aparelho.</p>
+  </section>
+
+  <!-- ============ JOGO ============ -->
+  <section id="play" class="screen">
+    <div class="game-top">
+      <span class="pill" id="pillCat">—</span>
+      <span class="pill score" id="pillScore">0 acertos</span>
+    </div>
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+
+    <div class="q-card">
+      <div class="q-num" id="qNum">Exercício 1 de 40</div>
+      <div class="q-text" id="qText"></div>
+
+      <div class="play-zone">
+        <button class="btn-play" id="btnPlay">▶ &nbsp;Ouvir</button>
+        <div class="play-hint" id="playHint">Você pode ouvir quantas vezes quiser</div>
+      </div>
+
+      <div class="opts" id="opts"></div>
+
+      <div class="fb" id="fb">
+        <div class="fb-h" id="fbH"></div>
+        <div class="fb-b" id="fbB"></div>
+      </div>
+
+      <div class="jump" id="jump" style="display:none">
+        <button class="btn-primary" id="btnNext">Próximo exercício →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULTADO ============ -->
+  <section id="result" class="screen">
+    <div class="score-hero">
+      <div class="ring">
+        <svg width="150" height="150">
+          <circle cx="75" cy="75" r="64" fill="none" stroke="#e8e0d4" stroke-width="11"/>
+          <circle id="ringProg" cx="75" cy="75" r="64" fill="none" stroke="#c9962e" stroke-width="11"
+                  stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"
+                  style="transition:stroke-dashoffset .9s ease"/>
+        </svg>
+        <div class="ring-txt"><b id="resScore">0</b><span id="resOf">de 40</span></div>
+      </div>
+      <div class="verdict" id="resVerdict"></div>
+      <div class="verdict-sub" id="resSub"></div>
+    </div>
+
+    <div class="brk" id="brk"></div>
+
+    <div class="acts">
+      <button class="btn-primary" id="btnAgain">Treinar de novo</button>
+      <button class="btn-ghost" id="btnHome">Voltar ao início</button>
+    </div>
+    <p class="note">A ordem das questões e as notas sorteadas mudam a cada rodada.</p>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   1. ÁUDIO — síntese aditiva simples, sem arquivos externos
+   ========================================================= */
+var AC = window.AudioContext || window.webkitAudioContext;
+var ctx = null;
+
+function audioCtx(){
+  if(!AC) throw new Error('Seu navegador não suporta áudio.');
+  if(!ctx) ctx = new AC();
+  if(ctx.state === 'suspended') ctx.resume();
+  return ctx;
+}
+
+function midiToFreq(m){ return 440 * Math.pow(2, (m - 69) / 12); }
+
+/* uma nota: fundamental + harmônicos, envelope sem clique */
+function tone(midi, at, dur, peak){
+  var c = audioCtx();
+  var f = midiToFreq(midi);
+  var master = c.createGain();
+  master.connect(c.destination);
+
+  var partials = [[1,1],[2,0.30],[3,0.13],[4,0.05],[5,0.03]];
+  var stopAt = at + dur + 0.05;
+
+  for(var i=0;i<partials.length;i++){
+    var o = c.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(f * partials[i][0], at);
+    var g = c.createGain();
+    g.gain.setValueAtTime(partials[i][1], at);
+    o.connect(g);
+    g.connect(master);
+    o.start(at);
+    o.stop(stopAt);
+  }
+
+  master.gain.setValueAtTime(0.0001, at);
+  master.gain.exponentialRampToValueAtTime(Math.max(0.001, peak), at + 0.02);
+  master.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak * 0.45), at + dur * 0.8);
+  master.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+}
+
+/* toca uma lista de eventos: {midis:[...], at:seg, dur:seg} */
+function playEvents(events){
+  var c = audioCtx();
+  var t0 = c.currentTime + 0.12;
+  var end = 0;
+  for(var i=0;i<events.length;i++){
+    var ev = events[i];
+    var n = Math.max(1, ev.midis.length);
+    var peak = ev.midis.length > 1 ? Math.min(0.22, 0.34 / n) : 0.26;
+    for(var j=0;j<ev.midis.length;j++){
+      tone(ev.midis[j], t0 + ev.at, ev.dur, peak);
+    }
+    if(ev.at + ev.dur > end) end = ev.at + ev.dur;
+  }
+  return end + 0.2;
+}
+
+/* =========================================================
+   2. TEORIA — nomes, intervalos, escalas
+   ========================================================= */
+var PC = ['Dó','Dó#','Ré','Ré#','Mi','Fá','Fá#','Sol','Sol#','Lá','Lá#','Si'];
+function noteName(m){ return PC[((m % 12) + 12) % 12]; }
+function noteFull(m){ return noteName(m) + (Math.floor(m / 12) - 1); }
+
+var INTERVAL_NAME = {
+  0:'uníssono', 1:'2ª menor', 2:'2ª maior', 3:'3ª menor', 4:'3ª maior',
+  5:'4ª justa', 6:'trítono', 7:'5ª justa', 8:'6ª menor', 9:'6ª maior',
+  10:'7ª menor', 11:'7ª maior', 12:'oitava'
+};
+
+var SCALES = {
+  'Maior':            [0,2,4,5,7,9,11,12],
+  'Menor natural':    [0,2,3,5,7,8,10,12],
+  'Pentatônica maior':[0,2,4,7,9,12]
+};
+
+/* =========================================================
+   3. UTILIDADES
+   ========================================================= */
+function rnd(n){ return Math.floor(Math.random() * n); }
+function pick(a){ return a[rnd(a.length)]; }
+function shuffle(a){
+  var b = a.slice();
+  for(var i=b.length-1;i>0;i--){ var j = rnd(i+1); var t=b[i]; b[i]=b[j]; b[j]=t; }
+  return b;
+}
+function uniq(a){
+  var out = [];
+  for(var i=0;i<a.length;i++){ if(out.indexOf(a[i]) === -1) out.push(a[i]); }
+  return out;
+}
+
+/* =========================================================
+   4. GERADORES DE EXERCÍCIO (40 no total)
+   ========================================================= */
+
+/* ---- 4.1 Notas isoladas (6) ---- */
+function exNotas(){
+  var ref = 60;                                        /* Dó4 de referência */
+  var pool = [62,64,65,67,69,71,72];                   /* Ré4 … Dó5          */
+  var target = pick(pool);
+  var correct = noteName(target);
+
+  var others = uniq([62,64,65,67,69,71,72,74].map(noteName)).filter(function(n){ return n !== correct; });
+  var opts = shuffle([correct].concat(shuffle(others).slice(0,3)));
+
+  return {
+    cat:'notas',
+    prompt:'Primeiro você ouve o Dó de referência, depois a nota. Qual nota é?',
+    events:[{midis:[ref], at:0, dur:0.85}, {midis:[target], at:1.15, dur:1.15}],
+    options: opts,
+    correct: correct,
+    explain: 'Era ' + noteFull(target) + ' — ' + INTERVAL_NAME[target - ref] + ' acima do Dó de referência.'
+  };
+}
+
+/* ---- 4.2 Extensão e registro (5) ---- */
+function exRegistro(){
+  var pool = [45,47,50,52,55,57,59,60,62,64,65,67,69,71,72,74,76,77,79,81,84];
+  var t = pick(pool);
+  var correct = t < 60 ? 'Grave' : (t < 72 ? 'Médio' : 'Agudo');
+
+  return {
+    cat:'extensao',
+    prompt:'Ouça a nota. Ela está na região grave, média ou aguda?',
+    events:[{midis:[t], at:0, dur:1.3}],
+    options: ['Grave','Médio','Agudo'],
+    correct: correct,
+    explain: 'Era ' + noteFull(t) + ' — região ' + correct.toLowerCase() + '. Grave fica abaixo de Dó4, médio de Dó4 a Si4, agudo de Dó5 pra cima.'
+  };
+}
+
+/* ---- 4.3 Notas em conjunto — quantidade (4) ---- */
+function exConjuntoQtd(){
+  var n = pick([2,3,4]);
+  var root = pick([55,57,60,62,64]);
+  var steps = [0,4,7,11];
+  var midis = [];
+  for(var i=0;i<n;i++) midis.push(root + steps[i]);
+
+  return {
+    cat:'conjunto',
+    prompt:'Quantas notas você ouviu tocando juntas?',
+    events:[{midis:midis, at:0, dur:1.35}],
+    options: ['2 notas','3 notas','4 notas'],
+    correct: n + ' notas',
+    explain: 'Soaram ' + n + ' notas ao mesmo tempo: ' + midis.map(noteFull).join(', ') + '.'
+  };
+}
+
+/* ---- 4.4 Notas em conjunto — qualidade (4) ---- */
+function exConjuntoQual(){
+  var tipos = [
+    {nome:'Maior',        off:[0,4,7]},
+    {nome:'Menor',        off:[0,3,7]},
+    {nome:'Quinta aberta',off:[0,7]},
+    {nome:'Oitava',       off:[0,12]}
+  ];
+  var t = pick(tipos);
+  var root = pick([55,57,60,62,64]);
+  var midis = t.off.map(function(o){ return root + o; });
+
+  return {
+    cat:'conjunto',
+    prompt:'Que tipo de conjunto você ouviu?',
+    events:[{midis:midis, at:0, dur:1.4}],
+    options: ['Maior','Menor','Quinta aberta','Oitava'],
+    correct: t.nome,
+    explain: 'Era um acorde ' + t.nome.toLowerCase() + ' em ' + noteName(root) + ' (' + midis.map(noteFull).join(', ') + ').'
+  };
+}
+
+/* ---- 4.5 Escalas, ascendente e descendente (5 + 5) ---- */
+function exEscala(asc){
+  var nome = pick(Object.keys(SCALES));
+  var offs = SCALES[nome].slice();
+  var root = pick([55,57,60,62,64]);
+
+  var seq = offs.map(function(o){ return root + o; });
+  if(!asc) seq = seq.slice().reverse();
+
+  var events = seq.map(function(m,i){ return {midis:[m], at: i * 0.37, dur: 0.55}; });
+
+  return {
+    cat: asc ? 'escalasAsc' : 'escalasDesc',
+    prompt: 'Que escala você ouviu, tocada ' + (asc ? 'subindo' : 'descendo') + '?',
+    events: events,
+    options: ['Maior','Menor natural','Pentatônica maior'],
+    correct: nome,
+    explain: 'Era a escala ' + nome.toLowerCase() + ' em ' + noteName(root) + ', ' + (asc ? 'ascendente' : 'descendente') + '.'
+  };
+}
+
+/* ---- 4.6 Saltos e intervalos (6) ---- */
+function exSalto(){
+  var cand = [
+    {semi:2,  nome:'2ª maior'},
+    {semi:4,  nome:'3ª maior'},
+    {semi:5,  nome:'4ª justa'},
+    {semi:7,  nome:'5ª justa'},
+    {semi:9,  nome:'6ª maior'},
+    {semi:12, nome:'Oitava'}
+  ];
+  var alvo = pick(cand);
+  var root = pick([55,57,60,62,64]);
+  var to = root + alvo.semi;
+
+  var distratores = shuffle(cand.filter(function(c){ return c.nome !== alvo.nome; })).slice(0,3).map(function(c){ return c.nome; });
+
+  return {
+    cat:'saltos',
+    prompt:'Duas notas em sequência. Qual é o intervalo entre elas?',
+    events:[{midis:[root], at:0, dur:0.8}, {midis:[to], at:1.05, dur:1.15}],
+    options: shuffle([alvo.nome].concat(distratores)),
+    correct: alvo.nome,
+    explain: 'De ' + noteFull(root) + ' para ' + noteFull(to) + ' são ' + alvo.semi + ' semitons — ' + alvo.nome.toLowerCase() + '.'
+  };
+}
+
+/* ---- 4.7 Notas alteradas (5) ---- */
+function exAlterada(){
+  var ref = 60;
+  var pool = [61,62,63,64,65,66,67,68,69,70,71];
+  var target = pick(pool);
+  var correct = noteName(target);
+
+  var proximos = [];
+  for(var d=-2; d<=2; d++){
+    var m = target + d;
+    if(m !== target && m >= 60 && m <= 72) proximos.push(noteName(m));
+  }
+  proximos = uniq(proximos).filter(function(n){ return n !== correct; });
+
+  var outros = shuffle(proximos).slice(0,3);
+  if(outros.length < 3){
+    var resto = uniq([61,62,63,64,65,66,67,68,69,70,71].map(noteName)).filter(function(n){
+      return n !== correct && outros.indexOf(n) === -1;
+    });
+    outros = outros.concat(shuffle(resto).slice(0, 3 - outros.length));
+  }
+
+  var alter = correct.indexOf('#') > -1;
+  var base = alter ? correct.replace('#','') : correct;
+
+  return {
+    cat:'alteradas',
+    prompt:'Referência: Dó. Qual é a nota alterada que você ouviu?',
+    events:[{midis:[ref], at:0, dur:0.85}, {midis:[target], at:1.15, dur:1.2}],
+    options: shuffle([correct].concat(outros)),
+    correct: correct,
+    explain: 'Era ' + noteFull(target) + (alter
+      ? ' — meio tom acima de ' + base + '.'
+      : ' — nota natural, sem alteração.')
+  };
+}
+
+/* =========================================================
+   5. CATÁLOGO
+   ========================================================= */
+var CATS = {
+  notas:       {label:'Notas isoladas',      desc:'Dó de referência + a nota',       n:6, ico:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>'},
+  extensao:    {label:'Extensão e registro', desc:'Grave, médio ou agudo',           n:5, ico:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-8M22 20v-4" stroke-linecap="round"/></svg>'},
+  conjunto:    {label:'Notas em conjunto',   desc:'Acordes: quantidade e tipo',      n:8, ico:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 5v14M13 5v14M18 5v14"/></svg>'},
+  escalasAsc:  {label:'Escalas ascendentes', desc:'Maior, menor e pentatônica',      n:5, ico:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18l5-6 4 4 7-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7h5v5" stroke-linecap="round" stroke-linejoin="round"/></svg>'},
+  escalasDesc: {label:'Escalas descendentes',desc:'As mesmas, descendo',             n:5, ico:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l5 6 4-4 7 9" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 17h5v-5" stroke-linecap="round" stroke-linejoin="round"/></svg>'},
+  saltos:      {label:'Saltos e intervalos', desc:'2ª até oitava',                   n:6, ico:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17c3 0 3-10 7-10s4 10 7 10" stroke-linecap="round"/><circle cx="5" cy="17" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="17" r="1.6" fill="currentColor" stroke="none"/></svg>'},
+  alteradas:   {label:'Notas alteradas',     desc:'Sustenidos e meios-tons',         n:5, ico:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4v16M15 4v16M6 9h12M6 15h12" stroke-linecap="round"/></svg>'}
+};
+
+var BUILD = {
+  notas: exNotas,
+  extensao: exRegistro,
+  escalasAsc: function(){ return exEscala(true); },
+  escalasDesc: function(){ return exEscala(false); },
+  saltos: exSalto,
+  alteradas: exAlterada,
+  conjunto: function(i){
+    /* 8 exercícios: 4 de quantidade, 4 de qualidade, alternando */
+    return (i % 2 === 0) ? exConjuntoQtd() : exConjuntoQual();
+  }
+};
+
+function montarTreino(catKey){
+  var q = [];
+  if(catKey === 'full'){
+    for(var k in CATS){
+      if(!CATS.hasOwnProperty(k)) continue;
+      for(var i=0;i<CATS[k].n;i++) q.push(BUILD[k](i));
+    }
+    return shuffle(q);
+  }
+  var n = CATS[catKey].n;
+  for(var j=0;j<n;j++) q.push(BUILD[catKey](j));
+  return q;
+}
+
+/* =========================================================
+   6. ESTADO E NAVEGAÇÃO
+   ========================================================= */
+var S = { queue:[], idx:0, hits:0, answers:[], mode:'full', playing:false };
+
+function $(id){ return document.getElementById(id); }
+function show(id){
+  var screens = document.querySelectorAll('.screen');
+  for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
+  $(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+/* recorde salvo */
+var BEST_KEY = 'kc_percepcao_best';
+function carregarBest(){
+  try{
+    var bruto = localStorage.getItem(BEST_KEY);
+    if(!bruto) return;
+    var v = JSON.parse(bruto);
+    if(v && typeof v.pct === 'number') $('bestStat').textContent = v.pct + '%';
+  }catch(e){}
+}
+function salvarBest(pct){
+  try{
+    var bruto = localStorage.getItem(BEST_KEY);
+    var atual = bruto ? JSON.parse(bruto) : null;
+    if(!atual || typeof atual.pct !== 'number' || pct > atual.pct){
+      localStorage.setItem(BEST_KEY, JSON.stringify({pct:pct, quando:Date.now()}));
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
+/* menu de blocos */
+function renderCats(){
+  var grid = $('catGrid');
+  grid.innerHTML = '';
+  for(var k in CATS){
+    if(!CATS.hasOwnProperty(k)) continue;
+    (function(key){
+      var c = CATS[key];
+      var b = document.createElement('button');
+      b.className = 'cat';
+      b.innerHTML = '<span class="cat-ico">' + c.ico + '</span>' +
+                    '<span class="cat-txt"><strong>' + c.label + '</strong><span>' + c.desc + '</span></span>' +
+                    '<span class="cat-n">' + c.n + '</span>';
+      b.addEventListener('click', function(){ iniciar(key); });
+      grid.appendChild(b);
+    })(k);
+  }
+}
+
+/* =========================================================
+   7. RODADA
+   ========================================================= */
+function iniciar(mode){
+  S.mode = mode;
+  S.queue = montarTreino(mode);
+  S.idx = 0;
+  S.hits = 0;
+  S.answers = [];
+  show('play');
+  renderQ();
+}
+
+function renderQ(){
+  var q = S.queue[S.idx];
+  var total = S.queue.length;
+
+  $('pillCat').textContent = (S.mode === 'full') ? 'Treino completo' : CATS[S.mode].label;
+  $('pillScore').textContent = 'Acertos ' + S.hits + '/' + total;
+  $('barFill').style.width = ((S.idx / total) * 100) + '%';
+
+  $('qNum').textContent = 'Exercício ' + (S.idx + 1) + ' de ' + total;
+  $('qText').textContent = q.prompt;
+
+  /* opções */
+  var box = $('opts');
+  box.innerHTML = '';
+  var letras = ['A','B','C','D','E'];
+  q.options.forEach(function(op, i){
+    var b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = '<span class="k">' + letras[i] + '</span><span>' + op + '</span>';
+    b.setAttribute('data-val', op);
+    b.addEventListener('click', function(){ responder(b, op, q); });
+    box.appendChild(b);
+  });
+
+  /* feedback escondido */
+  $('fb').className = 'fb';
+  $('fb').classList.remove('show');
+  $('jump').style.display = 'none';
+
+  /* botão ouvir */
+  var bp = $('btnPlay');
+  bp.disabled = false;
+  bp.innerHTML = '▶ &nbsp;Ouvir';
+  $('playHint').textContent = 'Você pode ouvir quantas vezes quiser';
+
+  /* autoplay (o clique anterior já liberou o áudio) */
+  tocar(q);
+}
+
+function tocar(q){
+  if(S.playing) return;
+  var dur = 1;
+  try{
+    dur = playEvents(q.events);
+  }catch(e){
+    $('playHint').textContent = 'Não consegui tocar o áudio: ' + e.message;
+    return;
+  }
+  S.playing = true;
+
+  var bp = $('btnPlay');
+  bp.disabled = true;
+  bp.innerHTML = '<span class="wave"><i></i><i></i><i></i><i></i><i></i></span> &nbsp;Tocando';
+
+  var ms = Math.max(400, dur * 1000);
+  setTimeout(function(){
+    S.playing = false;
+    bp.disabled = false;
+    bp.innerHTML = '↻ &nbsp;Ouvir de novo';
+  }, ms);
+}
+
+function responder(el, escolha, q){
+  var acertou = (escolha === q.correct);
+
+  var opts = $('opts').querySelectorAll('.opt');
+  for(var i=0;i<opts.length;i++){
+    opts[i].disabled = true;
+    if(opts[i].getAttribute('data-val') === q.correct) opts[i].classList.add('correct');
+  }
+  if(!acertou) el.classList.add('wrong');
+
+  if(acertou) S.hits++;
+  S.answers.push({cat:q.cat, ok:acertou});
+
+  $('pillScore').textContent = 'Acertos ' + S.hits + '/' + S.queue.length;
+  $('barFill').style.width = (((S.idx + 1) / S.queue.length) * 100) + '%';
+
+  var fb = $('fb');
+  fb.className = 'fb show ' + (acertou ? 'ok' : 'no');
+  $('fbH').textContent = acertou ? '✓ Acertou!' : '✗ Não foi essa';
+  $('fbB').textContent = q.explain;
+
+  $('jump').style.display = 'flex';
+  $('btnNext').textContent = (S.idx + 1 < S.queue.length) ? 'Próximo exercício →' : 'Ver resultado →';
+}
+
+function proximo(){
+  S.idx++;
+  if(S.idx >= S.queue.length){ resultado(); return; }
+  renderQ();
+}
+
+/* =========================================================
+   8. RESULTADO
+   ========================================================= */
+function resultado(){
+  var total = S.queue.length;
+  var pct = Math.round((S.hits / total) * 100);
+
+  $('resScore').textContent = S.hits;
+  $('resOf').textContent = 'de ' + total;
+
+  var off = 402 - (402 * pct / 100);
+  var ring = $('ringProg');
+  ring.style.strokeDashoffset = 402;
+  setTimeout(function(){ ring.style.strokeDashoffset = off; }, 60);
+
+  var v, sub;
+  if(pct >= 90){ v = 'Ouvido afiado!'; sub = 'Você está identificando com muita segurança. Suba para blocos mais difíceis e tente manter acima de 90%.'; }
+  else if(pct >= 75){ v = 'Muito bom.'; sub = 'Base sólida. Ajuste os poucos erros e repita o treino para firmar.'; }
+  else if(pct >= 55){ v = 'Bom caminho.'; sub = 'Você já reconhece o básico. Repita este treino mais 2 ou 3 vezes: a repetição é o que fixa.'; }
+  else { v = 'Começando.'; sub = 'Normal no início. Treine por bloco, um de cada vez, e volte ao completo depois. O ouvido se treina.'; }
+  $('resVerdict').textContent = v;
+  $('resSub').textContent = sub;
+
+  /* quebra por categoria */
+  var mapa = {};
+  S.answers.forEach(function(a){
+    if(!mapa[a.cat]) mapa[a.cat] = {ok:0, n:0};
+    mapa[a.cat].n++;
+    if(a.ok) mapa[a.cat].ok++;
+  });
+
+  /* aponta o bloco mais fraco DESTA rodada, não um generico */
+  var pior = null;
+  Object.keys(mapa).forEach(function(k){
+    var c = mapa[k];
+    if(c.ok === c.n) return;                       /* sem erro, nao e candidato */
+    var p = c.ok / c.n;
+    if(!pior || p < pior.p) pior = {k:k, p:p, ok:c.ok, n:c.n};
+  });
+  if(pior){
+    $('resSub').textContent = sub + ' Seu ponto de atenção agora: ' + CATS[pior.k].label.toLowerCase() +
+      ' (' + pior.ok + ' de ' + pior.n + '). Treine esse bloco isolado antes de repetir o completo.';
+  }else if(pct === 100){
+    $('resSub').textContent = 'Zero erros. Suba a dificuldade: tente o treino completo ou aumente a velocidade ouvindo menos vezes.';
+  }
+
+  var brk = $('brk');
+  brk.innerHTML = '';
+  Object.keys(mapa).forEach(function(k){
+    var c = mapa[k];
+    var p = Math.round((c.ok / c.n) * 100);
+    var cls = p >= 75 ? 'high' : (p >= 45 ? '' : 'low');
+    var row = document.createElement('div');
+    row.className = 'brk-row';
+    row.innerHTML = '<span class="brk-name">' + CATS[k].label + '</span>' +
+                    '<span class="brk-bar"><i class="' + cls + '" style="width:' + p + '%"></i></span>' +
+                    '<span class="brk-v">' + c.ok + '/' + c.n + '</span>';
+    brk.appendChild(row);
+  });
+
+  var novo = salvarBest(pct);
+  if(novo) carregarBest();
+
+  show('result');
+}
+
+/* =========================================================
+   9. LIGAÇÕES
+   ========================================================= */
+$('btnFull').addEventListener('click', function(){ iniciar('full'); });
+$('btnPlay').addEventListener('click', function(){ tocar(S.queue[S.idx]); });
+$('btnNext').addEventListener('click', proximo);
+$('btnAgain').addEventListener('click', function(){ iniciar(S.mode); });
+$('btnHome').addEventListener('click', function(){ show('home'); });
+
+/* atalhos de teclado: espaço ouve, 1-4 responde, enter avança */
+document.addEventListener('keydown', function(e){
+  if(!$('play').classList.contains('active')) return;
+  if(e.code === 'Space'){ e.preventDefault(); if(!S.playing) tocar(S.queue[S.idx]); return; }
+  if(e.key === 'Enter' && $('jump').style.display === 'flex'){ proximo(); return; }
+  var n = parseInt(e.key, 10);
+  if(n >= 1 && n <= 5){
+    var opts = $('opts').querySelectorAll('.opt');
+    if(opts[n-1] && !opts[n-1].disabled) opts[n-1].click();
+  }
+});
+
+renderCats();
+carregarBest();
+</script>
+<script>
+/* ===== PORTÃO DE SENHA (troque SENHA abaixo para mudar) ===== */
+(function(){
+  var SENHA = 'keila2026';
+  var KEY = 'percepcao_liberado';
+  function h(s){ var x=5381; for(var i=0;i<s.length;i++){ x=((x*33)+s.charCodeAt(i))>>>0; } return x.toString(36); }
+  var gate = document.getElementById('gate');
+  if(!gate) return;
+  function unlock(){ gate.classList.add('hide'); try{ sessionStorage.setItem(KEY,'1'); }catch(e){} }
+  try{ if(sessionStorage.getItem(KEY)==='1'){ unlock(); return; } }catch(e){}
+  var inp = document.getElementById('gate-pass');
+  var btn = document.getElementById('gate-btn');
+  var err = document.getElementById('gate-err');
+  function tentar(){
+    var v = inp.value.trim().toLowerCase();
+    if(!v){ err.textContent='Digite a senha.'; return; }
+    if(h(v) === h(SENHA)){ unlock(); }
+    else { err.textContent='Senha incorreta. Confira com a Keila.'; inp.value=''; inp.focus(); }
+  }
+  btn.addEventListener('click', tentar);
+  inp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); tentar(); } });
+  setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 350);
+})();
+</script>
+</body>
+</html>
